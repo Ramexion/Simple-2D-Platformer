@@ -24,6 +24,7 @@ function rectsIntersect(a,b){
 }
 
 const gravity = 0.7;
+let win = false;
 let keys = {};
 let scoreEl = document.getElementById('score');
 let score = 0;
@@ -38,6 +39,7 @@ window.addEventListener('keydown', e=>{ keys[e.key] = true; if(['ArrowUp',' ','w
 window.addEventListener('keyup', e=>{ keys[e.key]=false; });
 
 function update(){
+  if (win) return; // freeze gameplay
   const accel = 1.2;
   if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.vx -= accel;
   if (keys['ArrowRight'] || keys['d'] || keys['D']) player.vx += accel;
@@ -47,6 +49,9 @@ function update(){
   player.x += player.vx;
   player.y += player.vy;
   player.vx *= 0.85;
+  if (score >= 55) {
+win = true;
+}
 
   if (player.y > H + 200){ player.x = 100; player.y = 380; player.vx = player.vy = 0; score = Math.max(0,score-5); }
 
@@ -63,6 +68,17 @@ function update(){
         }
       }
     }
+    document.addEventListener('keydown', (e) => {
+if (e.key.toLowerCase() === 'r') {
+// reset game
+score = 0;
+win = false;
+player.x = 50;
+player.y = 50;
+player.vx = 0;
+player.vy = 0;
+}
+});
   }
 
   for (let c of coins){ if (!c.collected && rectsIntersect(player,{x:c.x,y:c.y,w:c.w,h:c.h})){ c.collected = true; score += 10; }}
@@ -77,6 +93,11 @@ function update(){
 }
 
 function draw(){
+  if (win) {
+ctx.fillStyle = "yellow";
+ctx.font = "38px Arial";
+ctx.fillText("YOU WIN! Press R to Replay", 40, 200);
+}
   ctx.clearRect(0,0,W,H);
   if (images.bg){ const bg = images.bg; const scale = Math.max(W/bg.width, H/bg.height); ctx.drawImage(bg, -camera.x*0.2, 0, bg.width*scale, bg.height*scale); }
   else { ctx.fillStyle = '#cdeaff'; ctx.fillRect(0,0,W,H); ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.ellipse(150 - (camera.x*0.2%400),80,80,36,0,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.ellipse(520 - (camera.x*0.12%700),120,90,42,0,0,Math.PI*2); ctx.fill(); }
@@ -100,25 +121,3 @@ let touchStartX = null;
 canvas.addEventListener('touchstart', e=>{ const t = e.touches[0]; touchStartX = t.clientX; });
 canvas.addEventListener('touchmove', e=>{ const t = e.touches[0]; if (!touchStartX) return; const dx = t.clientX - touchStartX; keys['ArrowLeft'] = dx < -20; keys['ArrowRight'] = dx > 20; });
 canvas.addEventListener('touchend', e=>{ keys = {}; touchStartX=null; });
-
-let win = false;
-if (score >= 55) {
-win = true;
-}
-if (win) return; // freeze gameplay
-if (win) {
-ctx.fillStyle = "yellow";
-ctx.font = "38px Arial";
-ctx.fillText("YOU WIN! Press R to Replay", 40, 200);
-}
-document.addEventListener('keydown', (e) => {
-if (e.key.toLowerCase() === 'r') {
-// reset game
-score = 0;
-win = false;
-player.x = 50;
-player.y = 50;
-player.vx = 0;
-player.vy = 0;
-}
-});
