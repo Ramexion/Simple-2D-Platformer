@@ -1,2 +1,2 @@
-# Simple-2D-Platformer
+# Simple 2D Platformer
 index.html
