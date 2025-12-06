@@ -101,3 +101,24 @@ canvas.addEventListener('touchstart', e=>{ const t = e.touches[0]; touchStartX =
 canvas.addEventListener('touchmove', e=>{ const t = e.touches[0]; if (!touchStartX) return; const dx = t.clientX - touchStartX; keys['ArrowLeft'] = dx < -20; keys['ArrowRight'] = dx > 20; });
 canvas.addEventListener('touchend', e=>{ keys = {}; touchStartX=null; });
 
+let win = false;
+if (score >= 55) {
+win = true;
+}
+if (win) return; // freeze gameplay
+if (win) {
+ctx.fillStyle = "yellow";
+ctx.font = "38px Arial";
+ctx.fillText("YOU WIN! Press R to Replay", 40, 200);
+}
+document.addEventListener('keydown', (e) => {
+if (e.key.toLowerCase() === 'r') {
+// reset game
+score = 0;
+win = false;
+player.x = 50;
+player.y = 50;
+player.vx = 0;
+player.vy = 0;
+}
+});
