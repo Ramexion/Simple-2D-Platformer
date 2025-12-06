@@ -10,7 +10,7 @@ const imageFiles = {
   tile:   'assets/tile.png',
   bg:     'assets/bg.png',
   coin:   'assets/coin.png',
-  enemy:  'assets/enemy.png'
+  enemy:  'assets/Enemy.png'
 };
 for (const k in imageFiles){
   const img = new Image();
@@ -100,3 +100,4 @@ let touchStartX = null;
 canvas.addEventListener('touchstart', e=>{ const t = e.touches[0]; touchStartX = t.clientX; });
 canvas.addEventListener('touchmove', e=>{ const t = e.touches[0]; if (!touchStartX) return; const dx = t.clientX - touchStartX; keys['ArrowLeft'] = dx < -20; keys['ArrowRight'] = dx > 20; });
 canvas.addEventListener('touchend', e=>{ keys = {}; touchStartX=null; });
+
